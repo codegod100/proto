@@ -19,7 +19,9 @@
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
     "@atcute/client": "npm:@atcute/client@^2.0.6",
     "@atcute/oauth-browser-client": "npm:@atcute/oauth-browser-client@^1.0.7",
+    "@atproto/identity": "npm:@atproto/identity@^0.4.3",
     "@atproto/oauth-client-node": "npm:@atproto/oauth-client-node@^0.2.3",
+    "@skyware/jetstream": "npm:@skyware/jetstream@^0.2.1",
     "pocketbase": "npm:pocketbase@^0.22.1",
     "preact": "https://esm.sh/preact@10.22.0",
     "preact/": "https://esm.sh/preact@10.22.0/",
@@ -28,7 +30,8 @@
     "tailwindcss": "npm:tailwindcss@3.4.1",
     "tailwindcss/": "npm:/tailwindcss@3.4.1/",
     "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
-    "$std/": "https://deno.land/std@0.216.0/"
+    "$std/": "https://deno.land/std@0.216.0/",
+    "timeago.js": "npm:timeago.js@^4.0.2"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

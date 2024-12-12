@@ -5,5 +5,6 @@ export default async function () {
   const publicUrl = Deno.env.get("PUBLIC_URL");
   // console.log({ publicUrl });
   const url = publicUrl || `http://127.0.0.1:${Deno.env.get("PORT")}`;
-  return <Lookup publicUrl={publicUrl} url={url} />;
+  const pocketUrl = Deno.env.get("POCKETBASE_URL");
+  return <Lookup publicUrl={publicUrl} url={url} pocketUrl={pocketUrl} />;
 }
