@@ -9,6 +9,7 @@ import * as $index from "./routes/index.tsx";
 import * as $lookup from "./routes/lookup.tsx";
 import * as $oauth_handle_ from "./routes/oauth/[handle].tsx";
 import * as $oauth_callback from "./routes/oauth/callback.tsx";
+import * as $rpc from "./routes/rpc.ts";
 import * as $Callback from "./islands/Callback.tsx";
 import * as $Counter from "./islands/Counter.tsx";
 import * as $Login from "./islands/Login.tsx";
@@ -25,6 +26,7 @@ const manifest = {
     "./routes/lookup.tsx": $lookup,
     "./routes/oauth/[handle].tsx": $oauth_handle_,
     "./routes/oauth/callback.tsx": $oauth_callback,
+    "./routes/rpc.ts": $rpc,
   },
   islands: {
     "./islands/Callback.tsx": $Callback,
