@@ -46,6 +46,6 @@ export default async function Page(_req, props: PageProps) {
   const url = publicUrl || `http://127.0.0.1:${Deno.env.get("PORT")}`;
 
   // const url = authUrl.toString();
-  return <OAuth publicUrl={publicUrl} url={url} did={props.params.did} />;
+  return <OAuth publicUrl={publicUrl} url={url} handle={props.params.handle} />;
   // return Response.redirect(authUrl, 307);
 }

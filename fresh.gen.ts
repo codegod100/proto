@@ -8,7 +8,7 @@ import * as $api_joke from "./routes/api/joke.ts";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $lookup from "./routes/lookup.tsx";
-import * as $oauth_did_ from "./routes/oauth/[did].tsx";
+import * as $oauth_handle_ from "./routes/oauth/[handle].tsx";
 import * as $oauth_callback from "./routes/oauth/callback.tsx";
 import * as $Callback from "./islands/Callback.tsx";
 import * as $Counter from "./islands/Counter.tsx";
@@ -24,7 +24,7 @@ const manifest = {
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
     "./routes/lookup.tsx": $lookup,
-    "./routes/oauth/[did].tsx": $oauth_did_,
+    "./routes/oauth/[handle].tsx": $oauth_handle_,
     "./routes/oauth/callback.tsx": $oauth_callback,
   },
   islands: {

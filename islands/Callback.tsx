@@ -1,8 +1,8 @@
 import { IS_BROWSER } from "$fresh/runtime.ts";
 import {
-  OAuthUserAgent,
-  finalizeAuthorization,
   configureOAuth,
+  finalizeAuthorization,
+  OAuthUserAgent,
 } from "@atcute/oauth-browser-client";
 
 async function authorize(params) {
@@ -21,9 +21,11 @@ export default function Callback({ publicUrl, url }) {
     metadata: {
       client_id: publicUrl
         ? `${url}/client-metadata.json`
-        : `http://localhost?redirect_uri=${enc(
-            `${url}/oauth/callback`
-          )}&scope=${enc("atproto transition:generic")}`,
+        : `http://localhost?redirect_uri=${
+          enc(
+            `${url}/oauth/callback`,
+          )
+        }&scope=${enc("atproto transition:generic")}`,
       redirect_uri: `${url}/oauth/callback`,
     },
   });
@@ -35,5 +37,9 @@ export default function Callback({ publicUrl, url }) {
   authorize(params);
   //   console.log({ session });
 
-  return <div>Testing</div>;
+  return (
+    <div>
+      <a href="/lookup">go</a>
+    </div>
+  );
 }

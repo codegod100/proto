@@ -19,6 +19,7 @@
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
     "@atcute/client": "npm:@atcute/client@^2.0.6",
     "@atcute/oauth-browser-client": "npm:@atcute/oauth-browser-client@^1.0.7",
+    "@atcute/tid": "npm:@atcute/tid@^1.0.1",
     "@atproto/identity": "npm:@atproto/identity@^0.4.3",
     "@atproto/oauth-client-node": "npm:@atproto/oauth-client-node@^0.2.3",
     "@skyware/jetstream": "npm:@skyware/jetstream@^0.2.1",
