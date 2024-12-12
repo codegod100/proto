@@ -1,4 +1,13 @@
 import { type PageProps } from "$fresh/server.ts";
+import { Jetstream } from "@skyware/jetstream";
+console.log("loading jetstream");
+const jetstream = new Jetstream({
+  wantedCollections: ["social.psky.chat.message"],
+});
+jetstream.start();
+jetstream.onCreate("social.psky.chat.message", async (event) => {
+  console.log("New message", event);
+});
 export default function App({ Component }: PageProps) {
   return (
     <html>

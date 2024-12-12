@@ -4,9 +4,7 @@
 
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
-import * as $api_joke from "./routes/api/joke.ts";
 import * as $client_metadata_json_index from "./routes/client-metadata.json/index.tsx";
-import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $lookup from "./routes/lookup.tsx";
 import * as $oauth_handle_ from "./routes/oauth/[handle].tsx";
@@ -22,9 +20,7 @@ const manifest = {
   routes: {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
-    "./routes/api/joke.ts": $api_joke,
     "./routes/client-metadata.json/index.tsx": $client_metadata_json_index,
-    "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
     "./routes/lookup.tsx": $lookup,
     "./routes/oauth/[handle].tsx": $oauth_handle_,
