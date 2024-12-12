@@ -13,6 +13,7 @@ import * as $oauth_handle_ from "./routes/oauth/[handle].tsx";
 import * as $oauth_callback from "./routes/oauth/callback.tsx";
 import * as $Callback from "./islands/Callback.tsx";
 import * as $Counter from "./islands/Counter.tsx";
+import * as $Login from "./islands/Login.tsx";
 import * as $Lookup from "./islands/Lookup.tsx";
 import * as $OAuth from "./islands/OAuth.tsx";
 import type { Manifest } from "$fresh/server.ts";
@@ -32,6 +33,7 @@ const manifest = {
   islands: {
     "./islands/Callback.tsx": $Callback,
     "./islands/Counter.tsx": $Counter,
+    "./islands/Login.tsx": $Login,
     "./islands/Lookup.tsx": $Lookup,
     "./islands/OAuth.tsx": $OAuth,
   },

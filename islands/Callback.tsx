@@ -14,6 +14,7 @@ async function authorize(params) {
 }
 
 export default function Callback({ publicUrl, url }) {
+  if (!IS_BROWSER) return;
   const enc = encodeURIComponent;
   //   const publicUrl = Deno.env.get("PUBLIC_URL");
   //   const url = publicUrl || `http://127.0.0.1:${Deno.env.get("PORT")}`;
@@ -30,16 +31,15 @@ export default function Callback({ publicUrl, url }) {
     },
   });
   //   console.log({ loc: window.location });
-  console.log("hello");
-  if (!IS_BROWSER) return;
-  console.log({ foo: location.hash.slice(1) });
+
+  // console.log({ foo: location.hash.slice(1) });
   const params = new URLSearchParams(location.hash.slice(1));
   authorize(params);
   //   console.log({ session });
 
   return (
     <div>
-      <a href="/lookup">go</a>
+      processing...
     </div>
   );
 }

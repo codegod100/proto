@@ -36,6 +36,6 @@ export default function OAuth({ handle, publicUrl, url }) {
     },
   });
   authorize(handle);
-  return <div>test</div>;
+  return <div>processing...</div>;
   //   return <a href={authUrl}>{authUrl}</a>;
 }
