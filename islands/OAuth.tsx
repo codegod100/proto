@@ -18,11 +18,11 @@ async function authorize(handle: string) {
 }
 
 export default function OAuth({ handle, publicUrl, url }) {
+  if (!IS_BROWSER) return;
   localStorage["handle"] = handle;
   const enc = encodeURIComponent;
   //   const publicUrl = Deno.env.get("PUBLIC_URL");
   //   const url = publicUrl || `http://127.0.0.1:${Deno.env.get("PORT")}`;
-  if (!IS_BROWSER) return;
   configureOAuth({
     metadata: {
       client_id: publicUrl

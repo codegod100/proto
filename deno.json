@@ -11,10 +11,15 @@
   },
   "lint": {
     "rules": {
-      "tags": ["fresh", "recommended"]
+      "tags": [
+        "fresh",
+        "recommended"
+      ]
     }
   },
-  "exclude": ["**/_fresh/*"],
+  "exclude": [
+    "**/_fresh/*"
+  ],
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
     "@atcute/client": "npm:@atcute/client@^2.0.6",
@@ -38,5 +43,13 @@
     "jsx": "react-jsx",
     "jsxImportSource": "preact"
   },
-  "nodeModulesDir": "auto"
+  "nodeModulesDir": "auto",
+  "deploy": {
+    "project": "307804a4-64f5-4bfc-a450-213a528619ed",
+    "exclude": [
+      "**/node_modules"
+    ],
+    "include": [],
+    "entrypoint": "main.ts"
+  }
 }
