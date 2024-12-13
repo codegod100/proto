@@ -3,7 +3,7 @@ import { format } from "timeago.js";
 import PocketBase from "pocketbase";
 import { useEffect } from "preact/hooks";
 async function pocket(pb, items) {
-  console.log("pocket");
+  // console.log("pocket");
   const divs = [];
   const room =
     "at://did:plc:b3pn34agqqchkaf75v7h43dk/social.psky.chat.room/3lat3axu4bk2k";
@@ -40,7 +40,7 @@ export default function ({ pocketUrl }) {
   if (items.value.length === 0) {
     pocket(pb, items);
   }
-  console.log({ pb });
+  // console.log({ pb });
 
   return <div id="scroller">{items.value}</div>;
 }

@@ -31,41 +31,50 @@ export async function handler(
       metadata: {
         client_id: publicUrl
           ? `${url}/client-metadata.json`
-          : `http://localhost?redirect_uri=${
-            enc(
-              `${url}/oauth/callback`,
-            )
+          : `http://localhost?redirect_uri=${enc(
+            `${url}/oauth/callback`,
+          )
           }&scope=${enc("atproto transition:generic")}`,
         redirect_uri: `${url}/oauth/callback`,
       },
     });
     const server = new OAuthServerAgent(session.info.server, session.dpopKey);
-    const refresh = await server.refresh({
-      sub: session.info.sub,
-      token: session.token,
-    });
+    let refresh
+    try {
+      refresh = await server.refresh({
+        sub: session.info.sub,
+        token: session.token,
+      })
+    } catch (e) {
+
+      return new Response("", {
+        status: 307,
+        headers: { Location: "/" },
+      });
+    }
+    // console.log({ refresh });
     session.token = refresh;
     const cookie = { name: "session", value: btoa(JSON.stringify(session)) };
     setCookie(
       resp.headers,
       cookie,
     );
-    const a = await checkAuth({
-      session,
-      method: "com.atproto.server.checkAccountStatus",
-      params: {},
-    }).catch((e) => {
-      console.log(e);
-      return false;
-    });
+    // const a = await checkAuth({
+    //   session,
+    //   method: "com.atproto.server.checkAccountStatus",
+    //   params: {},
+    // }).catch((e) => {
+    //   console.log(e);
+    //   return false;
+    // });
 
-    console.log({ a });
-    if (!a) {
-      // return new Response("", {
-      //   status: 307,
-      //   headers: { Location: "/" },
-      // });
-    }
+    // console.log({ a });
+    // if (!a) {
+    //   // return new Response("", {
+    //   //   status: 307,
+    //   //   headers: { Location: "/" },
+    //   // });
+    // }
   }
   return resp;
 }
