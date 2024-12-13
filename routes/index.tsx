@@ -1,65 +1,46 @@
-import {
-  configureOAuth,
-  resolveFromIdentity,
-} from "@atcute/oauth-browser-client";
-import { OAuthUserAgent } from "@atcute/oauth-browser-client";
-import { Cookie, getCookies, setCookie } from "@std/http/cookie";
-import { FreshContext } from "$fresh/server.ts";
-import { XRPC } from "@atcute/client";
-import * as TID from "@atcute/tid";
+import { Session } from "@atcute/oauth-browser-client";
+import { FreshContext, PageProps } from "$fresh/server.ts";
 import Input from "../islands/chat/Input.tsx";
 import Content from "../islands/chat/Content.tsx";
-import { Signal, useSignal } from "@preact/signals";
 import PocketBase from "pocketbase";
 import Login from "../islands/Login.tsx";
+import getItems from "../lib/getItems.ts";
+import { useSignal } from "@preact/signals";
 
 export const handler = {
-  async POST(req: Request, ctx: FreshContext) {
-    configureOAuth({ metadata: {} });
-    const form = await req.json();
-    const { identity, metadata } = await resolveFromIdentity(form.handle);
-    const cookies = getCookies(req.headers);
-    const session = JSON.parse(atob(cookies.session));
-    // const session = form.session;
-    const agent = new OAuthUserAgent(session);
-    const rpc = new XRPC({ handler: agent });
+  async GET(_req: Request, ctx: FreshContext) {
+    const pocketUrl = Deno.env.get("POCKETBASE_URL");
+    if (!pocketUrl) return <div>No pocketbase url</div>;
+    const pb = new PocketBase(pocketUrl);
     const room =
       "at://did:plc:b3pn34agqqchkaf75v7h43dk/social.psky.chat.room/3lat3axu4bk2k";
-    const res = await rpc.call(
-      "com.atproto.repo.putRecord",
-      {
-        data: {
-          repo: identity.id,
-          collection: "social.psky.chat.message",
-          rkey: TID.now(),
-          record: {
-            $type: "social.psky.chat.message",
-            content: form.message,
-            room,
-          },
-          validate: false,
-        },
-      },
-    );
-    console.log({ res });
-    return ctx.render({});
-  },
-  GET(req: Request, ctx: FreshContext) {
-    console.log({ state: ctx.state });
-    return ctx.render(ctx);
+    const initialItems = await getItems(pb, room);
+    return ctx.render({
+      pocketUrl,
+      initialItems,
+      room,
+    });
   },
 };
 
-export default function (ctx) {
-  console.log({ state: ctx.state });
-  const pocketUrl = Deno.env.get("POCKETBASE_URL");
-  if (!pocketUrl) return <div>No pocketbase url</div>;
-  console.log("loading lookup server component");
+type Data = {
+  pocketUrl: string;
+  initialItems: [];
+  room: string;
+};
+
+export default function (props: PageProps<Data>) {
+  const { pocketUrl, room, initialItems } = props.data;
+  let s: Session = {};
+  const session = useSignal(s);
+  // const results = await getItems(pb);
+
   return (
     <div>
-      {!ctx.state.loggedIn && <Login />}
-      <Content pocketUrl={pocketUrl} />
-      {ctx.state.loggedIn && <Input />}
+      Room: {room}
+      <Login session={session} />
+      <Content room={room} initialItems={initialItems} pocketUrl={pocketUrl} />
+      <Input session={session} />
     </div>
   );
 }

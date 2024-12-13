@@ -1,17 +1,25 @@
-import { Signal, useSignal } from "@preact/signals";
+import { useSignal } from "@preact/signals";
+import { configureOAuth } from "@atcute/oauth-browser-client";
 import { getSession } from "../lib/util.ts";
-import { configureOAuth, OAuthUserAgent } from "@atcute/oauth-browser-client";
-import { IS_BROWSER } from "$fresh/runtime.ts";
+import { IS_BROWSER } from "$fresh/src/runtime/utils.ts";
 
-export default function Login() {
-  // if (!IS_BROWSER) return;
+async function setSession(session) {
+  session.value = await getSession(localStorage["handle"]);
+  console.log({ inside: session.value });
+}
+
+let initial = true;
+export default function Login({ session }) {
   const handle = useSignal("");
+  if (initial && IS_BROWSER) setSession(session);
+  initial = false;
+  if (session.value) return <div />;
   return (
     <div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          window.location = `/oauth/${handle}`;
+          globalThis.window.location.href = `/oauth/${handle}`;
         }}
       >
         <div>

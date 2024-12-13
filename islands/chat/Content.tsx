@@ -2,45 +2,54 @@ import { IS_BROWSER } from "$fresh/runtime.ts";
 import { format } from "timeago.js";
 import PocketBase from "pocketbase";
 import { useEffect } from "preact/hooks";
-async function pocket(pb, items) {
-  // console.log("pocket");
-  const divs = [];
-  const room =
-    "at://did:plc:b3pn34agqqchkaf75v7h43dk/social.psky.chat.room/3lat3axu4bk2k";
-  const resultList = await pb
-    .collection("messages")
-    .getList(1, 10, { sort: "-created", filter: `room="${room}"` });
-  const results = resultList.items.reverse();
-  // const didres = new DidResolver({});
-
-  for (const result of results) {
-    divs.push(
-      <div>
-        ({format(result.created)}) {result.handle}: {result.content}
-      </div>,
-    );
-  }
-  items.value = divs;
-}
 
 import { Signal, useSignal } from "@preact/signals";
+import { JSX } from "preact/jsx-runtime";
+import getItems from "../../lib/getItems.ts";
 let initialLoad = false;
-export default function ({ pocketUrl }) {
-  console.log("loading content island");
-  const pb = new PocketBase(pocketUrl);
+
+async function updateItems(pb: PocketBase, items, room) {
+  const results = await getItems(pb, room);
+  const divs = results.map((result, key) => {
+    return (
+      <div key={key}>
+        ({format(result.created)}) {result.handle}: {result.content}
+      </div>
+    );
+  });
+  items.value = divs;
+}
+export default function (
+  { pocketUrl, initialItems, room },
+) {
+  // console.log({ initialItems });
+  // console.log("loading content island");
+  // const pb = new PocketBase(pocketUrl);
   if (!initialLoad) {
+    const pb = new PocketBase(pocketUrl);
     pb.collection("messages").subscribe("*", function (e) {
-      pocket(pb, items);
+      updateItems(pb, items, room);
     });
   }
   initialLoad = true;
 
   const items = useSignal([]);
-
+  const divs = initialItems && initialItems.map((result, key) => {
+    return (
+      <div key={key}>
+        ({format(result.created)}) {result.handle}: {result.content}
+      </div>
+    );
+  });
+  let results;
   if (items.value.length === 0) {
-    pocket(pb, items);
+    results = divs;
+  } else {
+    results = items.value;
   }
-  // console.log({ pb });
-
-  return <div id="scroller">{items.value}</div>;
+  return (
+    <div id="scroller">
+      {results}
+    </div>
+  );
 }

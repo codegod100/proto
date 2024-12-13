@@ -1,5 +1,5 @@
 import { NodeOAuthClient } from "@atproto/oauth-client-node";
-import { StateStore, SessionStore } from "./storage.ts";
+import { SessionStore, StateStore } from "./storage.ts";
 export const createClient = async () => {
   const publicUrl = Deno.env.get("PUBLIC_URL");
   const url = publicUrl || `http://127.0.0.1:${Deno.env.get("PORT")}`;
@@ -9,7 +9,9 @@ export const createClient = async () => {
       client_name: "AT Protocol Express App",
       client_id: publicUrl
         ? `${url}/client-metadata.json`
-        : `http://localhost?redirect_uri=${enc(`${url}/oauth/callback`)}&scope=${enc("atproto transition:generic")}`,
+        : `http://localhost?redirect_uri=${
+          enc(`${url}/oauth/callback`)
+        }&scope=${enc("atproto transition:generic")}`,
 
       client_uri: url,
       redirect_uris: [`${url}/oauth/callback`],
