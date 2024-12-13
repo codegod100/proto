@@ -19,8 +19,8 @@ export async function getSession(handle: string) {
 
 export async function checkAuth(form) {
   // form: handle, session, method, params
-  const { identity, metadata } = await resolveFromIdentity(form.handle);
-  configureOAuth({ metadata });
+  // const { identity, metadata } = await resolveFromIdentity(form.handle);
+  configureOAuth({ metadata: {} });
   const session = form.session;
   const agent = new OAuthUserAgent(session);
   const rpc = new XRPC({ handler: agent });
@@ -28,11 +28,11 @@ export async function checkAuth(form) {
     form.method,
     form.params,
   ).catch((e) => {
-    console.log(e);
+    // console.log(e);
     return null;
   });
 
-  console.log({ res });
+  // console.log({ res });
   if (!res) return false;
   return true;
 }

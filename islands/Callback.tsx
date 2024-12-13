@@ -4,17 +4,28 @@ import {
   finalizeAuthorization,
   OAuthUserAgent,
 } from "@atcute/oauth-browser-client";
+import { Cookie, getCookies, setCookie } from "@std/http/cookie";
 
 async function authorize(params) {
   const session = await finalizeAuthorization(params);
   console.log({ session });
+  const headers = new Headers();
+
+  // const cookie: Cookie = { name: "session", value: btoa(session.toString()) };
+  // setCookie(headers, cookie);
+  fetch("/store", {
+    method: "POST",
+    headers,
+    body: JSON.stringify(session),
+  });
   const agent = new OAuthUserAgent(session);
   console.log({ agent });
-  window.location.href = "/lookup";
+  // globalThis.window.location.href = "/lookup";
 }
 
 export default function Callback({ publicUrl, url }) {
   if (!IS_BROWSER) return;
+
   const enc = encodeURIComponent;
   //   const publicUrl = Deno.env.get("PUBLIC_URL");
   //   const url = publicUrl || `http://127.0.0.1:${Deno.env.get("PORT")}`;

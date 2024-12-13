@@ -37,49 +37,8 @@ async function setSession(session: Signal) {
   session.value = _session;
 }
 
-async function checkAgent() {
-  const session = await getSession(localStorage["handle"]);
-  const a = await checkAuth({
-    handle: localStorage["handle"],
-    session,
-    method: "com.atproto.server.checkAccountStatus",
-    params: {},
-  });
-  console.log({ a });
-  if (!a) globalThis.location.href = "/";
-}
-
-async function checkAgent2() {
-  configureOAuth({ metadata: {} });
-  const session = await getSession(localStorage["handle"]);
-  console.log({ session });
-  let res = await fetch("/rpc", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      session: session,
-      handle: localStorage["handle"],
-      method: "com.atproto.server.checkAccountStatus",
-      params: {},
-    }),
-  }).catch((e) => {
-    console.log(e);
-    return null;
-  });
-  console.log({ ress: res });
-  res = await res.json();
-  if (res.status !== "ok") {
-    // globalThis.location.href = "/";
-  }
-  return res;
-}
 export default function ({ url, publicUrl, pocketUrl }: Props) {
-  const d = new Date();
-  console.log(Date.now());
   if (!IS_BROWSER) return;
-  checkAgent();
   const items = useSignal([]);
   const session = useSignal({});
   const message = useSignal("");
