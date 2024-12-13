@@ -8,11 +8,13 @@ export async function handler(
   const resp = await ctx.next();
   const paths = ["/lookup"];
   const urls = req.url;
+  // console.log({ req })
   const url = new URL(urls);
   // console.log({ url })
   const cookies = getCookies(req.headers);
   const matched = paths.includes(url.pathname);
-  if (matched) {
+  if (matched && req.method === "GET") {
+    console.log("route matched")
     // console.log("cookies")
     // console.log(cookies)
     if (!cookies.session) {
