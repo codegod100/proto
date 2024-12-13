@@ -13,14 +13,12 @@ async function authorize(params) {
 
   // const cookie: Cookie = { name: "session", value: btoa(session.toString()) };
   // setCookie(headers, cookie);
-  fetch("/store", {
+  await fetch("/store", {
     method: "POST",
     headers,
     body: JSON.stringify(session),
   });
-  const agent = new OAuthUserAgent(session);
-  console.log({ agent });
-  // globalThis.window.location.href = "/lookup";
+  globalThis.window.location.href = "/lookup";
 }
 
 export default function Callback({ publicUrl, url }) {

@@ -3,16 +3,23 @@ import {
   resolveFromIdentity,
 } from "@atcute/oauth-browser-client";
 import { OAuthUserAgent } from "@atcute/oauth-browser-client";
-import Lookup from "../islands/Lookup.tsx";
+import { Cookie, getCookies, setCookie } from "@std/http/cookie";
 import { FreshContext } from "$fresh/server.ts";
 import { XRPC } from "@atcute/client";
 import * as TID from "@atcute/tid";
+import Input from "../islands/chat/Input.tsx";
+import Content from "../islands/chat/Content.tsx";
+import { Signal, useSignal } from "@preact/signals";
+import PocketBase from "pocketbase";
+
 export const handler = {
   async POST(req: Request, ctx: FreshContext) {
     configureOAuth({ metadata: {} });
     const form = await req.json();
     const { identity, metadata } = await resolveFromIdentity(form.handle);
-    const session = form.session;
+    const cookies = getCookies(req.headers);
+    const session = JSON.parse(atob(cookies.session));
+    // const session = form.session;
     const agent = new OAuthUserAgent(session);
     const rpc = new XRPC({ handler: agent });
     const room =
@@ -34,13 +41,30 @@ export const handler = {
       },
     );
     console.log({ res });
-    return ctx.render(Lookup, {});
+    return ctx.render({});
   },
 };
-export default async function () {
-  const publicUrl = Deno.env.get("PUBLIC_URL") || "";
-  const url = publicUrl || `http://127.0.0.1:${Deno.env.get("PORT")}`;
+
+export default function () {
+  // return <Lookup publicUrl={publicUrl} url={url} pocketUrl={pocketUrl} />;
+  // const items = useSignal([]);
+  // const session = useSignal({});
+  // const message = useSignal("");
+  // setSession(session);
+
+  // configureOAuth({ metadata: {} });
+  // const pb = new PocketBase(pocketUrl);
+  // pb.collection("messages").subscribe("*", function (e) {
+  //   pocket(pb);
+  // });
+  // const items = pocket(pb);
   const pocketUrl = Deno.env.get("POCKETBASE_URL");
   if (!pocketUrl) return <div>No pocketbase url</div>;
-  return <Lookup publicUrl={publicUrl} url={url} pocketUrl={pocketUrl} />;
+  console.log("loading lookup server component");
+  return (
+    <div>
+      <Content pocketUrl={pocketUrl} />
+      <Input />
+    </div>
+  );
 }

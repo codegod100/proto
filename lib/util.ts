@@ -1,4 +1,7 @@
-import { getSession as _getSession } from "@atcute/oauth-browser-client";
+import {
+  getSession as _getSession,
+  OAuthServerAgent,
+} from "@atcute/oauth-browser-client";
 
 import { FreshContext } from "$fresh/server.ts";
 import {
@@ -20,17 +23,16 @@ export async function getSession(handle: string) {
 export async function checkAuth(form) {
   // form: handle, session, method, params
   // const { identity, metadata } = await resolveFromIdentity(form.handle);
-  configureOAuth({ metadata: {} });
+  // configureOAuth({ metadata: {} });
+
   const session = form.session;
+
   const agent = new OAuthUserAgent(session);
   const rpc = new XRPC({ handler: agent });
   const res = await rpc.get(
     form.method,
     form.params,
-  ).catch((e) => {
-    // console.log(e);
-    return null;
-  });
+  );
 
   // console.log({ res });
   if (!res) return false;

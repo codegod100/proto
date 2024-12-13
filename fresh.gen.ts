@@ -13,10 +13,10 @@ import * as $oauth_callback from "./routes/oauth/callback.tsx";
 import * as $rpc from "./routes/rpc.ts";
 import * as $store from "./routes/store.tsx";
 import * as $Callback from "./islands/Callback.tsx";
-import * as $Counter from "./islands/Counter.tsx";
 import * as $Login from "./islands/Login.tsx";
-import * as $Lookup from "./islands/Lookup.tsx";
 import * as $OAuth from "./islands/OAuth.tsx";
+import * as $chat_Content from "./islands/chat/Content.tsx";
+import * as $chat_Input from "./islands/chat/Input.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -34,10 +34,10 @@ const manifest = {
   },
   islands: {
     "./islands/Callback.tsx": $Callback,
-    "./islands/Counter.tsx": $Counter,
     "./islands/Login.tsx": $Login,
-    "./islands/Lookup.tsx": $Lookup,
     "./islands/OAuth.tsx": $OAuth,
+    "./islands/chat/Content.tsx": $chat_Content,
+    "./islands/chat/Input.tsx": $chat_Input,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

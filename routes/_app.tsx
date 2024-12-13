@@ -8,6 +8,10 @@ console.log("loading jetstream");
 // jetstream.onCreate("social.psky.chat.message", async (event) => {
 //   console.log("New message", event);
 // });
+globalThis.addEventListener("unhandledrejection", (e) => {
+  console.log("unhandled rejection at:", e.promise, "reason:", e.reason);
+  e.preventDefault();
+});
 export default function App({ Component }: PageProps) {
   return (
     <html>
