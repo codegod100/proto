@@ -5,27 +5,24 @@ export async function handler(
   req: Request,
   ctx: FreshContext<State>,
 ) {
-  const resp = await ctx.next();
-  const paths = ["/lookup"];
+  const paths = ["/"];
   const urls = req.url;
+  // console.log(urls);
   // console.log({ req })
   const url = new URL(urls);
-  // console.log({ url })
+  // console.log({ url });
   const cookies = getCookies(req.headers);
   const matched = paths.includes(url.pathname);
+  // console.log(url.pathname);
+  ctx.state.loggedIn = true;
   if (matched && req.method === "GET") {
-    console.log("route matched")
-    // console.log("cookies")
-    // console.log(cookies)
+    console.log("route matched");
     if (!cookies.session) {
-      return new Response("", {
-        status: 307,
-        headers: { Location: "/" },
-      });
+      console.log("no session");
+      ctx.state.loggedIn = false;
+      return ctx.next();
     }
     const session = JSON.parse(atob(cookies.session));
-    // console.log(session);
-    // const session = await getSession(localStorage["handle"]);
     const enc = encodeURIComponent;
     const publicUrl = Deno.env.get("PUBLIC_URL");
     const url = publicUrl || `http://127.0.0.1:${Deno.env.get("PORT")}`;
@@ -41,42 +38,28 @@ export async function handler(
       },
     });
     const server = new OAuthServerAgent(session.info.server, session.dpopKey);
-    let refresh
+    console.log({ server });
+    let refresh;
     try {
       refresh = await server.refresh({
         sub: session.info.sub,
         token: session.token,
-      })
-    } catch (e) {
-
-      return new Response("", {
-        status: 307,
-        headers: { Location: "/" },
       });
+    } catch (e) {
+      console.log("oops", e);
+      ctx.state.loggedIn = false;
+      return await ctx.next();
     }
-    // console.log({ refresh });
     session.token = refresh;
     const cookie = { name: "session", value: btoa(JSON.stringify(session)) };
+    const resp = await ctx.next();
     setCookie(
       resp.headers,
       cookie,
     );
-    // const a = await checkAuth({
-    //   session,
-    //   method: "com.atproto.server.checkAccountStatus",
-    //   params: {},
-    // }).catch((e) => {
-    //   console.log(e);
-    //   return false;
-    // });
-
-    // console.log({ a });
-    // if (!a) {
-    //   // return new Response("", {
-    //   //   status: 307,
-    //   //   headers: { Location: "/" },
-    //   // });
-    // }
+    console.log({ resp });
+    return resp;
   }
-  return resp;
+  // console.log("normal");
+  return await ctx.next();
 }

@@ -3,7 +3,7 @@ export default function () {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        fetch("/lookup", {
+        fetch("/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
