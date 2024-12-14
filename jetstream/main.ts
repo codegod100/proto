@@ -1,19 +1,21 @@
-import { Jetstream } from "@skyware/jetstream";
 import { DidResolver } from "@atproto/identity";
 import PocketBase from "pocketbase";
 import dotenv from "dotenv";
 dotenv.config();
-const url = process.env.POCKETBASE_URL;
+const url = Deno.env.get("POCKETBASE_URL")!;
 console.log({ url });
 const pb = new PocketBase(url);
-console.log("loading jetstream");
 const didres = new DidResolver({});
-const jetstream = new Jetstream({
-  wantedCollections: ["nandi.schemas.post"],
-});
-jetstream.start();
-jetstream.onCreate("nandi.schemas.post", async (event) => {
-  console.log("New message", event);
+
+const socket = new WebSocket(
+  "wss://jetstream2.us-west.bsky.network/subscribe?wantedCollections=nandi.schemas.post",
+);
+
+socket.addEventListener("message", async (_event) => {
+  const event = JSON.parse(_event.data);
+  if (event.kind !== "commit") return;
+  console.log({ event });
+
   const doc = await didres.resolveAtprotoData(event.did);
   const did = event.did;
   const collection = event.commit.collection;
@@ -22,6 +24,7 @@ jetstream.onCreate("nandi.schemas.post", async (event) => {
   const handle = doc.handle;
   const title = event.commit.record.title;
   const content = event.commit.record.content;
+
   const data = {
     title,
     content,
@@ -29,6 +32,7 @@ jetstream.onCreate("nandi.schemas.post", async (event) => {
     handle,
     created: new Date(event.time_us).toISOString(),
   };
+
   const record = await pb
     .collection("posts")
     .create(data)
