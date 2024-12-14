@@ -11,10 +11,14 @@ import {
 } from "@atcute/oauth-browser-client";
 import { XRPC } from "@atcute/client";
 
-export async function getSession(handle: string) {
-  configureOAuth({ metadata: {} });
-  const { identity, metadata } = await resolveFromIdentity(handle);
-  console.log({ identity, metadata });
+export async function getSession(
+  handle: string,
+  metadata,
+) {
+  configureOAuth({
+    metadata,
+  });
+  const { identity, _metadata } = await resolveFromIdentity(handle);
   const session = await _getSession(identity.id, {
     allowStale: true,
   });
@@ -39,3 +43,24 @@ export async function checkAuth(form) {
   if (!res) return false;
   return true;
 }
+
+export function getMetadata() {
+  const publicUrl = Deno.env.get("PUBLIC_URL");
+  const url = publicUrl || `http://127.0.0.1:${Deno.env.get("PORT")}`;
+  const enc = encodeURIComponent;
+  const metadata = {
+    client_id: publicUrl
+      ? `${url}/client-metadata.json`
+      : `http://localhost?redirect_uri=${
+        enc(
+          `${url}/oauth/callback`,
+        )
+      }&scope=${enc("atproto transition:generic")}`,
+    redirect_uri: `${url}/oauth/callback`,
+  };
+  return metadata;
+}
+
+export type State = {
+  metadata: { client_id: string; redirect_uri: string };
+};

@@ -25,6 +25,7 @@ async function post(message: string, session: Session) {
 }
 
 export default function ({ session }) {
+  if (!session.value) return <div />;
   return (
     <form
       onSubmit={(e) => {

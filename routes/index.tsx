@@ -31,14 +31,25 @@ type Data = {
 
 export default function (props: PageProps<Data>) {
   const { pocketUrl, room, initialItems } = props.data;
-  let s: Session = {};
-  const session = useSignal(s);
-  // const results = await getItems(pb);
-
+  const session = useSignal(null);
+  const publicUrl = Deno.env.get("PUBLIC_URL");
+  const url = publicUrl || `http://127.0.0.1:${Deno.env.get("PORT")}`;
+  const enc = encodeURIComponent;
+  const metadata = {
+    client_id: publicUrl
+      ? `${url}/client-metadata.json`
+      : `http://localhost?redirect_uri=${
+        enc(
+          `${url}/oauth/callback`,
+        )
+      }&scope=${enc("atproto transition:generic")}`,
+    redirect_uri: `${url}/oauth/callback`,
+  };
   return (
     <div>
       Room: {room}
-      <Login session={session} />
+
+      <Login metadata={metadata} session={session} />
       <Content room={room} initialItems={initialItems} pocketUrl={pocketUrl} />
       <Input session={session} />
     </div>
