@@ -1,14 +1,7 @@
 import { type PageProps } from "$fresh/server.ts";
-import { Jetstream } from "@skyware/jetstream";
+
 import { FmtSubscriber } from "@bcheidemann/tracing";
-console.log("loading jetstream");
-// const jetstream = new Jetstream({
-//   wantedCollections: ["social.psky.chat.message"],
-// });
-// jetstream.start();
-// jetstream.onCreate("social.psky.chat.message", async (event) => {
-//   console.log("New message", event);
-// });
+
 globalThis.addEventListener("unhandledrejection", (e) => {
   console.log("unhandled rejection at:", e.promise, "reason:", e.reason);
   e.preventDefault();

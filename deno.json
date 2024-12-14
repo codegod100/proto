@@ -32,6 +32,7 @@
     "@popov/jwt": "jsr:@popov/jwt@^1.0.0",
     "@skyware/jetstream": "npm:@skyware/jetstream@^0.2.1",
     "@std/http": "jsr:@std/http@^1.0.12",
+    "dotenv": "npm:dotenv@^16.4.7",
     "pocketbase": "npm:pocketbase@^0.22.1",
     "preact": "https://esm.sh/preact@10.22.0",
     "preact/": "https://esm.sh/preact@10.22.0/",
