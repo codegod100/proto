@@ -3,6 +3,8 @@ import { resolveFromIdentity } from "@atcute/oauth-browser-client";
 import { FreshContext, RouteContext } from "$fresh/server.ts";
 import { State } from "../../lib/util.ts";
 export default async function (req: Request, ctx: FreshContext<State>) {
+  const path = ctx.url.pathname;
+  console.log({ path });
   const metadata = ctx.state.metadata;
   const handle = localStorage.getItem("handle")!;
   const { identity } = await resolveFromIdentity(handle);

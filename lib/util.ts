@@ -10,7 +10,7 @@ import {
   resolveFromIdentity,
 } from "@atcute/oauth-browser-client";
 import { XRPC } from "@atcute/client";
-
+import PocketBase from "pocketbase";
 export async function getSession(
   handle: string,
   metadata,
@@ -63,4 +63,19 @@ export function getMetadata() {
 
 export type State = {
   metadata: { client_id: string; redirect_uri: string };
+  pb: PocketBase;
 };
+
+export function getFieldValue(name: string): string {
+  const field: HTMLInputElement = document.getElementById(
+    name,
+  ) as HTMLInputElement;
+  return field.value;
+}
+
+export function setFieldValue(name: string, value: string) {
+  const field: HTMLInputElement = document.getElementById(
+    name,
+  ) as HTMLInputElement;
+  field.value = value;
+}

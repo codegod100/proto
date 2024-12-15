@@ -4,12 +4,6 @@ import { XRPC } from "@atcute/client";
 import * as TID from "@atcute/tid";
 import { getMetadata, getSession, State } from "../../lib/util.ts";
 
-function getFieldValue(name: string): string {
-  const field: HTMLInputElement = document.getElementById(
-    name,
-  ) as HTMLInputElement;
-  return field?.value;
-}
 async function submitPost(post: Post, metadata: State["metadata"]) {
   const session = await getSession(localStorage["handle"], metadata);
   const agent = new OAuthUserAgent(session);

@@ -1,57 +1,50 @@
-import { Session } from "@atcute/oauth-browser-client";
-import { FreshContext, PageProps } from "$fresh/server.ts";
+import { FreshContext } from "$fresh/server.ts";
 import Input from "../islands/chat/Input.tsx";
-import Content from "../islands/chat/Content.tsx";
-import PocketBase from "pocketbase";
 import Login from "../islands/Login.tsx";
-import getItems from "../lib/getItems.ts";
-import { useSignal } from "@preact/signals";
+import { State } from "../lib/util.ts";
+import { format } from "timeago.js";
+import { Signal, signal, useSignal } from "@preact/signals";
+import { JSX } from "preact/jsx-runtime";
+import Content from "../islands/chat/Content.tsx";
+import { configureOAuth } from "@atcute/oauth-browser-client";
 
-export const handler = {
-  async GET(_req: Request, ctx: FreshContext) {
-    const pocketUrl = Deno.env.get("POCKETBASE_URL");
-    if (!pocketUrl) return <div>No pocketbase url</div>;
-    const pb = new PocketBase(pocketUrl);
-    const room =
-      "at://did:plc:b3pn34agqqchkaf75v7h43dk/social.psky.chat.room/3lat3axu4bk2k";
-    const initialItems = await getItems(pb, room);
-    return ctx.render({
-      pocketUrl,
-      initialItems,
-      room,
-    });
-  },
-};
+export async function getItems(pb: PocketBase) {
+  const room =
+    "at://did:plc:b3pn34agqqchkaf75v7h43dk/social.psky.chat.room/3lat3axu4bk2k";
 
-type Data = {
-  pocketUrl: string;
-  initialItems: [];
-  room: string;
-};
+  console.log("updating value");
+  const resultList = await pb
+    .collection("messages")
+    .getList(1, 20, { sort: "-created", filter: `room="${room}"` });
+  const results = resultList.items.reverse();
 
-export default function (props: PageProps<Data>) {
-  const { pocketUrl, room, initialItems } = props.data;
-  const session = useSignal(null);
-  const publicUrl = Deno.env.get("PUBLIC_URL");
-  const url = publicUrl || `http://127.0.0.1:${Deno.env.get("PORT")}`;
-  const enc = encodeURIComponent;
-  const metadata = {
-    client_id: publicUrl
-      ? `${url}/client-metadata.json`
-      : `http://localhost?redirect_uri=${
-        enc(
-          `${url}/oauth/callback`,
-        )
-      }&scope=${enc("atproto transition:generic")}`,
-    redirect_uri: `${url}/oauth/callback`,
-  };
+  return results;
+}
+
+export function mapValues(results) {
+  const divs: JSX.HTMLAttributes<HTMLDivElement>[] = results.map(
+    (result, key) => {
+      return (
+        <div key={key}>
+          ({format(result.created)}) {result.handle}: {result.content}
+        </div>
+      );
+    }
+  );
+  return divs;
+}
+export default async function (req: Request, ctx: FreshContext<State>) {
+  const pb: PocketBase = ctx.state.pb;
+  const metadata = ctx.state.metadata;
+  const initialItems = await getItems(pb);
+
   return (
     <div>
-      Room: {room}
-
-      <Login metadata={metadata} session={session} />
-      <Content room={room} initialItems={initialItems} pocketUrl={pocketUrl} />
-      <Input session={session} />
+      {/* Room: {room} */}
+      <Login />
+      <div>{mapValues(initialItems)}</div>
+      <Content pb={pb} />
+      <Input metadata={metadata} />
     </div>
   );
 }

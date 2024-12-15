@@ -10,6 +10,9 @@ import * as $client_metadata_json_index from "./routes/client-metadata.json/inde
 import * as $index from "./routes/index.tsx";
 import * as $oauth_handle_ from "./routes/oauth/[handle].tsx";
 import * as $oauth_callback from "./routes/oauth/callback.tsx";
+import * as $posts_did_rkey_ from "./routes/posts/[did]/[rkey].tsx";
+import * as $posts_layout from "./routes/posts/_layout.tsx";
+import * as $posts_index from "./routes/posts/index.tsx";
 import * as $posts_new from "./routes/posts/new.tsx";
 import * as $rpc from "./routes/rpc.ts";
 import * as $store from "./routes/store.tsx";
@@ -31,6 +34,9 @@ const manifest = {
     "./routes/index.tsx": $index,
     "./routes/oauth/[handle].tsx": $oauth_handle_,
     "./routes/oauth/callback.tsx": $oauth_callback,
+    "./routes/posts/[did]/[rkey].tsx": $posts_did_rkey_,
+    "./routes/posts/_layout.tsx": $posts_layout,
+    "./routes/posts/index.tsx": $posts_index,
     "./routes/posts/new.tsx": $posts_new,
     "./routes/rpc.ts": $rpc,
     "./routes/store.tsx": $store,
